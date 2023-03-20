@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!--  Зависимости Bootstrap-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <title>Работа мечты!</title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Your ToDoList</a>
+            <div class="collapse navbar-collapse">
+                <div class="navbar-nav me-auto">
+                    <a class="nav-item nav-link active" href="/">ToDo</a>
+                    <a class="nav-item nav-link" th:href="@{/sessions}">Done</a>
+                    <a class="nav-item nav-link" th:href="@{/sessions}">New</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Number</th>
+                <th scope="col">Task</th>
+                <th scope="col">Done</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task: ${tasks}">
+                <td th:text="${task.id}" />
+                <td th:text="${task.description}" />
+                <td>
+              <span th:if="${task.done}">
+                <i class="bi bi-check-square"></i>
+              </span>
+                    <span th:if="${!task.done}">
+                  <i class="bi bi-square"></i>
+              </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-6"></div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6"><a class="btn btn-danger w-100" th:href="@{/one}">Add a new task</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
