@@ -29,8 +29,7 @@ public class SimpleTaskService implements TaskService {
         if (fileOptional.isEmpty()) {
             return false;
         }
-        var isDeleted = dbTaskStore.delete(id);
-        return isDeleted;
+        return dbTaskStore.delete(id);
     }
 
     @Override
@@ -46,5 +45,15 @@ public class SimpleTaskService implements TaskService {
     @Override
     public Collection<Task> findAll() {
         return dbTaskStore.findAll();
+    }
+
+    @Override
+    public Collection<Task> findDone() {
+        return dbTaskStore.findDone();
+    }
+
+    @Override
+    public Collection<Task> findNew() {
+        return dbTaskStore.findNew();
     }
 }

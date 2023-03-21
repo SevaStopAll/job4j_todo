@@ -16,4 +16,8 @@ public interface TaskService {
 
     Collection<Task> findAll();
 
+    Collection<Task> findDone();
+
+    Collection<Task> findNew();
+
 }

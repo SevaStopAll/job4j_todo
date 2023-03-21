@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.SimpleTaskService;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-
 @Controller
 @RequestMapping("/tasks")
 @ThreadSafe
@@ -57,6 +53,11 @@ public class TaskController {
 
     @GetMapping("/edit/{taskId}")
     public String formUpdateCandidate(Model model, @PathVariable("taskId") Integer id) {
+        var taskOptional = simpleTaskService.findById(id);
+        if (taskOptional.isEmpty()) {
+            model.addAttribute("message", "Task not found");
+            return "errors/404";
+        }
         model.addAttribute("task", simpleTaskService.findById(id));
         return "tasks/edit";
     }
@@ -71,17 +72,12 @@ public class TaskController {
 
     @PostMapping("/edit")
     public String update(@ModelAttribute Task task, Model model) {
-        try {
             var isUpdated = simpleTaskService.update(task);
             if (!isUpdated) {
                 model.addAttribute("message", "Task is not found");
                 return "errors/404";
             }
             return "redirect:/tasks";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
-            return "errors/404";
-        }
     }
 
     @GetMapping("/delete/{id}")
@@ -96,19 +92,13 @@ public class TaskController {
 
     @GetMapping("/finished")
     public String findAllFinishedTasks(Model model) {
-        List<Task> finishedTasks = simpleTaskService.findAll().stream()
-                .filter(Task::isDone)
-                .collect(toList());
-        model.addAttribute("finishedTasks", finishedTasks);
+        model.addAttribute("finishedTasks", simpleTaskService.findDone());
         return "tasks/finished";
     }
 
     @GetMapping("/new")
     public String findAllNewTasks(Model model) {
-        List<Task> newTasks = simpleTaskService.findAll().stream()
-                .filter(task -> !task.isDone())
-                .collect(toList());
-        model.addAttribute("newTasks", newTasks);
+        model.addAttribute("newTasks", simpleTaskService.findNew());
         return "tasks/new";
     }
 }

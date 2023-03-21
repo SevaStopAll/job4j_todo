@@ -22,5 +22,9 @@ public interface TaskStore {
 
     public Task findById(int id);
 
+    List<Task> findDone();
+
+    List<Task> findNew();
+
     void close();
 }

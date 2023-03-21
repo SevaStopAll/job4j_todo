@@ -72,10 +72,10 @@ public class DbTaskStore implements TaskStore {
     @Override
     public List<Task> findAll() {
         Session session = sf.openSession();
-        List result = new ArrayList<>();
+        List<Task> result = new ArrayList<>();
         try {
             session.beginTransaction();
-            Query query = session.createQuery("from ru.job4j.todo.model.Task", Task.class);
+            Query query = session.createQuery("from Task", Task.class);
             result = query.getResultList();
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -96,6 +96,40 @@ public class DbTaskStore implements TaskStore {
             query.setParameter("fId", id);
             result = query.uniqueResult();
             session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
+    public List<Task> findDone() {
+        Session session = sf.openSession();
+        List<Task> result = new ArrayList<>();
+        try {
+            session.beginTransaction();
+            Query<Task> query = session.createQuery(
+                    "from Task as t where t.done = true", Task.class);
+            result = query.getResultList();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
+    public List<Task> findNew() {
+        Session session = sf.openSession();
+        List<Task> result = new ArrayList<>();
+        try {
+            session.beginTransaction();
+            Query<Task> query = session.createQuery(
+                    "from Task as t where t.done = false", Task.class);
+            result = query.getResultList();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
