@@ -19,8 +19,8 @@
             <a class="navbar-brand" th:href="@{/tasks}">Your ToDoList</a>
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav me-auto">
-                    <a class="nav-item nav-link active" th:href="@{/tasks}">All tasks</a>
-                    <a class="nav-item nav-link" th:href="@{/tasks/finished}">Done tasks</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks}">All tasks</a>
+                    <a class="nav-item nav-link active" th:href="@{/tasks/finished}">Done tasks</a>
                     <a class="nav-item nav-link" th:href="@{/tasks/new}">New tasks</a>
                 </div>
             </div>
@@ -38,7 +38,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="task: ${tasks}">
+            <tr th:each="task: ${finishedTasks}">
                 <td><a  th:text="${task.name}" th:href="@{/tasks/{taskId}(taskId=${task.id})}"></a></td>
                 <td th:text="${task.created}"/>
                 <td>
@@ -56,7 +56,7 @@
     <div class="mb-3 row">
         <div class="col-sm">
             <div class="row">
-                <div class="col-sm"><a class="btn btn-danger w-100" th:href="@{tasks/add}">Add a new task</a></div>
+                <div class="col-sm"><a class="btn btn-danger w-100" th:href="@{/tasks/add}">Add a new task</a></div>
             </div>
         </div>
     </div>
