@@ -18,5 +18,4 @@ public interface TaskService {
 
     Collection<Task> findDone(boolean done);
 
-
 }

@@ -5,3 +5,10 @@ CREATE TABLE tasks (
    created TIMESTAMP,
    done BOOLEAN
 );
+
+CREATE TABLE todo_user(
+    id SERIAL PRIMARY KEY,
+    name TEXT not null,
+    login TEXT not null,
+    password TEXT not null unique
+);
