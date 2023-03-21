@@ -48,12 +48,8 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Collection<Task> findDone() {
-        return dbTaskStore.findDone();
+    public Collection<Task> findDone(boolean done) {
+        return dbTaskStore.findDone(done);
     }
 
-    @Override
-    public Collection<Task> findNew() {
-        return dbTaskStore.findNew();
-    }
 }

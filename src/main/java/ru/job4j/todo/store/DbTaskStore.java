@@ -105,30 +105,14 @@ public class DbTaskStore implements TaskStore {
     }
 
     @Override
-    public List<Task> findDone() {
+    public List<Task> findDone(boolean done) {
         Session session = sf.openSession();
         List<Task> result = new ArrayList<>();
         try {
             session.beginTransaction();
             Query<Task> query = session.createQuery(
-                    "from Task as t where t.done = true", Task.class);
-            result = query.getResultList();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return result;
-    }
-
-    @Override
-    public List<Task> findNew() {
-        Session session = sf.openSession();
-        List<Task> result = new ArrayList<>();
-        try {
-            session.beginTransaction();
-            Query<Task> query = session.createQuery(
-                    "from Task as t where t.done = false", Task.class);
+                    "from Task as t where t.done = :tDone", Task.class);
+            query.setParameter("tDone", done);
             result = query.getResultList();
         } catch (Exception e) {
             session.getTransaction().rollback();
