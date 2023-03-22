@@ -3,7 +3,7 @@ package ru.job4j.todo.service;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.store.DbTaskStore;
+import ru.job4j.todo.store.DbTaskRepository;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -12,15 +12,15 @@ import java.util.Optional;
 @ThreadSafe
 public class SimpleTaskService implements TaskService {
 
-    private final DbTaskStore dbTaskStore;
+    private final DbTaskRepository dbTaskRepository;
 
-    public SimpleTaskService(DbTaskStore dbTaskStore) {
-        this.dbTaskStore = dbTaskStore;
+    public SimpleTaskService(DbTaskRepository dbTaskRepository) {
+        this.dbTaskRepository = dbTaskRepository;
     }
 
     @Override
     public Task add(Task task) {
-        return dbTaskStore.add(task);
+        return dbTaskRepository.add(task);
     }
 
     @Override
@@ -29,27 +29,27 @@ public class SimpleTaskService implements TaskService {
         if (fileOptional.isEmpty()) {
             return false;
         }
-        return dbTaskStore.delete(id);
+        return dbTaskRepository.delete(id);
     }
 
     @Override
     public boolean update(Task task) {
-        return dbTaskStore.replace(task);
+        return dbTaskRepository.replace(task);
     }
 
     @Override
     public Optional<Task> findById(int id) {
-        return Optional.ofNullable(dbTaskStore.findById(id));
+        return Optional.ofNullable(dbTaskRepository.findById(id));
     }
 
     @Override
     public Collection<Task> findAll() {
-        return dbTaskStore.findAll();
+        return dbTaskRepository.findAll();
     }
 
     @Override
     public Collection<Task> findDone(boolean done) {
-        return dbTaskStore.findDone(done);
+        return dbTaskRepository.findDone(done);
     }
 
 }

@@ -1,11 +1,5 @@
 package ru.job4j.todo.store;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.query.Query;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
@@ -24,5 +18,4 @@ public interface TaskStore {
 
     List<Task> findDone(boolean done);
 
-    void close();
 }
