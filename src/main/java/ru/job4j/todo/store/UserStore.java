@@ -9,7 +9,7 @@ public interface UserStore {
 
     Optional<User> save(User user);
 
-    Optional<User> findByEmailAndPassword(String email, String password);
+    Optional<User> findByLoginAndPassword(String login, String password);
 
     Collection<User> findAll();
 

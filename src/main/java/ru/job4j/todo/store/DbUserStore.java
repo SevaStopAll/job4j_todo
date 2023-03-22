@@ -5,12 +5,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import ru.job4j.todo.model.Task;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class DbUserStore implements UserStore {
 
     private final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
@@ -24,7 +27,28 @@ public class DbUserStore implements UserStore {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.save(result);
+            session.save(user);
+            session.getTransaction().commit();
+            result = Optional.of(user);
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<User> findByLoginAndPassword(String login, String password) {
+        Session session = sf.openSession();
+        Optional<User> result = Optional.empty();
+        try {
+            session.beginTransaction();
+            Query<User> query = session.createQuery(
+                    "from User as u where u.login = :fLogin and u.password = :fPassword", User.class);
+            query.setParameter("fLogin", login);
+            query.setParameter("fPassword", password);
+            result = query.uniqueResultOptional();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -35,25 +59,19 @@ public class DbUserStore implements UserStore {
     }
 
     @Override
-    public Optional<User> findByEmailAndPassword(String email, String password) {
-        try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT * FROM users WHERE email = :email AND password = :password");
-            query
-                    .addParameter("email", email)
-                    .addParameter("password", password);
-            var user = query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetchFirst(User.class);
-            return Optional.ofNullable(user);
+    public List<User> findAll() {
+        Session session = sf.openSession();
+        List<User> result = new ArrayList<>();
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("from User", User.class);
+            result = query.getResultList();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
-        return Optional.empty();
-    }
-
-    @Override
-    public Collection<User> findAll() {
-        try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT * FROM user_todo");
-            return query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetch(User.class);
-        }
-        return null;
+        return result;
     }
 
     @Override
@@ -73,5 +91,4 @@ public class DbUserStore implements UserStore {
         }
         return result;
     }
-
 }

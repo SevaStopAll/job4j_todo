@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 
-    <title>Our ToDoList</title>
+    <title>Task</title>
 </head>
 <body>
 <div class="container-fluid p-0">
@@ -21,6 +21,14 @@
                     <a class="nav-item nav-link" th:href="@{/tasks}">All tasks</a>
                     <a class="nav-item nav-link" th:href="@{/tasks/finished}">Done tasks</a>
                     <a class="nav-item nav-link" th:href="@{/tasks/new}">New tasks</a>
+                </div>
+                <div class="d-flex" th:if="${user.name == 'Гость'}">
+                    <a class="nav-link text-secondary me-3" th:href="@{/users/register}">Sign up</a>
+                    <a class="nav-link text-secondary me-3" th:href="@{/users/login}">Log in</a>
+                </div>
+                <div class="d-flex" th:if="${user.name != 'Гость'}">
+                    <a class="nav-link text-secondary me-3" href="#" th:text="${user.name}"></a>
+                    <a class="nav-link text-secondary" th:href="@{/users/logout}">Log out</a>
                 </div>
             </div>
         </div>
