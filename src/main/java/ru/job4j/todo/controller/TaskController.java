@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.SimpleTaskService;
 
 @Controller
@@ -30,8 +31,9 @@ public class TaskController {
     }
 
     @PostMapping("/add")
-    public String create(@ModelAttribute Task task, Model model) {
+    public String create(@ModelAttribute Task task, Model model, @SessionAttribute User user) {
         try {
+            task.setUser(user);
             simpleTaskService.add(task);
             return "redirect:/tasks";
         } catch (Exception exception) {
