@@ -16,6 +16,8 @@
 
 ![image](https://user-images.githubusercontent.com/115623776/226606467-86dfac56-fc67-4a38-91b5-82ebcb10373b.png)
 
+### Future intentions: 
+  Improve interface. 
 
 ### Contacts
 TELEGRAM @vsevolod_prof
