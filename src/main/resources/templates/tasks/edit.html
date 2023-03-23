@@ -56,6 +56,13 @@
                 <input type="checkbox" name="done" class="form-check-input" id="done">
                 <label class="form-check-label" for="done">Done</label>
             </div>
+            <div class="mb-3">
+                <label for="categories" class="form-label"><b>Categories</b></label>
+                <select class="form-control" id="categories" multiple="multiple" name="categoryId">
+                    <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"/>
+                </select>
+            </div>
+            <input type="hidden" th:value="${categories}" name="catSave">
             <div class="mb-3 row">
                 <div class="col-6"></div>
                 <div class="col-6">

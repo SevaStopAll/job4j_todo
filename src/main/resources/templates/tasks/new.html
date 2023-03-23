@@ -44,6 +44,7 @@
                 <th scope="col">Priority</th>
                 <th scope="col">Created</th>
                 <th scope="col">Done</th>
+                <th scope="col">Category</th>
             </tr>
             </thead>
             <tbody>
@@ -59,6 +60,7 @@
                   <i class="bi bi-square"></i>
               </span>
                 </td>
+                <td th:text="${task.categories}"/>
             </tr>
             </tbody>
         </table>

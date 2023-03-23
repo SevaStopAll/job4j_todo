@@ -6,8 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.SimpleCategoryService;
 import ru.job4j.todo.service.SimplePriorityService;
 import ru.job4j.todo.service.SimpleTaskService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
@@ -16,10 +20,12 @@ public class TaskController {
 
     private final SimpleTaskService simpleTaskService;
     private final SimplePriorityService simplePriorityService;
+    private final SimpleCategoryService simpleCategoryService;
 
-    public TaskController(SimpleTaskService simpleTaskService, SimplePriorityService simplePriorityService) {
+    public TaskController(SimpleTaskService simpleTaskService, SimplePriorityService simplePriorityService, SimpleCategoryService simpleCategoryService) {
         this.simpleTaskService = simpleTaskService;
         this.simplePriorityService = simplePriorityService;
+        this.simpleCategoryService = simpleCategoryService;
     }
 
     @GetMapping
@@ -31,13 +37,17 @@ public class TaskController {
     @GetMapping("/add")
     public String getCreationPage(Model model) {
         model.addAttribute("priorities", simplePriorityService.findAll());
+        model.addAttribute("categories", simpleCategoryService.findAll());
+        model.addAttribute("categoryId", new ArrayList<Integer>());
         return "tasks/add";
     }
 
     @PostMapping("/add")
-    public String create(@ModelAttribute Task task, Model model, @SessionAttribute User user) {
+    public String create(@ModelAttribute Task task, Model model, @SessionAttribute User user, @RequestParam("categoryId") List<Integer> categoryId) {
         try {
             task.setUser(user);
+            var categories = simpleCategoryService.findByIds(categoryId);
+            task.getCategories().addAll(categories);
             simpleTaskService.add(task);
             return "redirect:/tasks";
         } catch (Exception exception) {
@@ -66,6 +76,8 @@ public class TaskController {
         }
         model.addAttribute("task", simpleTaskService.findById(id));
         model.addAttribute("priorities", simplePriorityService.findAll());
+        model.addAttribute("categories", simpleCategoryService.findAll());
+        model.addAttribute("categoryId", new ArrayList<Integer>());
         return "tasks/edit";
     }
 
@@ -78,8 +90,10 @@ public class TaskController {
     }
 
     @PostMapping("/edit")
-    public String update(@ModelAttribute Task task, Model model, @SessionAttribute User user) {
+    public String update(@ModelAttribute Task task, Model model, @SessionAttribute User user, @RequestParam("categoryId") List<Integer> categoryId) {
             task.setUser(user);
+            var categories = simpleCategoryService.findByIds(categoryId);
+            task.getCategories().addAll(categories);
             var isUpdated = simpleTaskService.update(task);
             if (!isUpdated) {
                 model.addAttribute("message", "Task is not found");
