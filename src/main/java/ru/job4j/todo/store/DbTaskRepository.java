@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Repository
 @AllArgsConstructor
-public class DbTaskRepository implements TaskStore {
+public class DbTaskRepository implements TaskRepository {
     private final CrudRepository crudRepository;
 
     @Override
@@ -35,13 +35,13 @@ public class DbTaskRepository implements TaskStore {
 
     @Override
     public List<Task> findAll() {
-        return crudRepository.query("from Task", Task.class);
+        return crudRepository.query("from Task AS t JOIN FETCH t.priority", Task.class);
     }
 
     @Override
     public Task findById(int id) {
         return crudRepository.optional(
-                "from Task where id = :fId", Task.class,
+                "from Task AS t JOIN FETCH t.priority where t.id = :fId", Task.class,
                 Map.of("fId", id)
         ).get();
     }
@@ -49,7 +49,7 @@ public class DbTaskRepository implements TaskStore {
     @Override
     public List<Task> findDone(boolean done) {
         return crudRepository.query(
-                "from Task where done = :fDone", Task.class,
+                "from Task AS t JOIN FETCH t.priority where done = :fDone", Task.class,
                 Map.of("fDone", done)
         );
     }

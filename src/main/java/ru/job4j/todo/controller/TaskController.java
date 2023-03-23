@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.SimplePriorityService;
 import ru.job4j.todo.service.SimpleTaskService;
 
 @Controller
@@ -14,9 +15,11 @@ import ru.job4j.todo.service.SimpleTaskService;
 public class TaskController {
 
     private final SimpleTaskService simpleTaskService;
+    private final SimplePriorityService simplePriorityService;
 
-    public TaskController(SimpleTaskService simpleTaskService) {
+    public TaskController(SimpleTaskService simpleTaskService, SimplePriorityService simplePriorityService) {
         this.simpleTaskService = simpleTaskService;
+        this.simplePriorityService = simplePriorityService;
     }
 
     @GetMapping
@@ -26,7 +29,8 @@ public class TaskController {
     }
 
     @GetMapping("/add")
-    public String getCreationPage() {
+    public String getCreationPage(Model model) {
+        model.addAttribute("priorities", simplePriorityService.findAll());
         return "tasks/add";
     }
 
@@ -61,6 +65,7 @@ public class TaskController {
             return "errors/404";
         }
         model.addAttribute("task", simpleTaskService.findById(id));
+        model.addAttribute("priorities", simplePriorityService.findAll());
         return "tasks/edit";
     }
 
@@ -73,7 +78,8 @@ public class TaskController {
     }
 
     @PostMapping("/edit")
-    public String update(@ModelAttribute Task task, Model model) {
+    public String update(@ModelAttribute Task task, Model model, @SessionAttribute User user) {
+            task.setUser(user);
             var isUpdated = simpleTaskService.update(task);
             if (!isUpdated) {
                 model.addAttribute("message", "Task is not found");

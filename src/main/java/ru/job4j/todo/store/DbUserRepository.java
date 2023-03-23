@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class DbUserRepository implements UserStore {
+public class DbUserRepository implements UserRepository {
     private final CrudRepository crudRepository;
 
     @Override

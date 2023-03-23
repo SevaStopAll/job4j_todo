@@ -5,7 +5,7 @@ import ru.job4j.todo.model.User;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface UserStore {
+public interface UserRepository {
 
     Optional<User> save(User user);
 
