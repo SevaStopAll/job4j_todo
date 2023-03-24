@@ -45,6 +45,7 @@
                 <th scope="col">User</th>
                 <th scope="col">Created</th>
                 <th scope="col">Done</th>
+                <th scope="col">Categories</th>
             </tr>
             </thead>
             <tbody>
@@ -61,7 +62,7 @@
                   <i class="bi bi-square"></i>
               </span>
                 </td>
-                <td th:text="${task.categories}"/>
+                <td th:each="category : ${task.categories}" th:text="${category.name}"/>
             </tr>
             </tbody>
         </table>
