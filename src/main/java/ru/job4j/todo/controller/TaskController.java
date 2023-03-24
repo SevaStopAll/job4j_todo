@@ -10,8 +10,11 @@ import ru.job4j.todo.service.SimpleCategoryService;
 import ru.job4j.todo.service.SimplePriorityService;
 import ru.job4j.todo.service.SimpleTaskService;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.job4j.todo.time.UserTimeZone.addUserTimeZone;
 
 @Controller
 @RequestMapping("/tasks")
@@ -29,8 +32,11 @@ public class TaskController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("tasks", simpleTaskService.findAll());
+    public String getAll(Model model, HttpSession httpSession) {
+        var user = (User) httpSession.getAttribute("user");
+        var tasks = simpleTaskService.findAll();
+        tasks.forEach(t -> addUserTimeZone(user, t));
+        model.addAttribute("tasks", tasks);
         return "/tasks";
     }
 

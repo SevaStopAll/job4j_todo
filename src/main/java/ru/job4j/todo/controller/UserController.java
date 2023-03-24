@@ -3,15 +3,14 @@ package ru.job4j.todo.controller;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.TimeZone;
 
 @Controller
 @RequestMapping("/users")
@@ -25,12 +24,18 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String getRegistrationPage() {
-        return "/users/register";
+    public String getRegistationPage(Model model) {
+        var zones = new ArrayList<TimeZone>();
+        for (String timeId : TimeZone.getAvailableIDs()) {
+            zones.add(TimeZone.getTimeZone(timeId));
+        }
+        model.addAttribute("timeZones", zones);
+        return "users/register";
     }
 
     @PostMapping("/register")
-    public String register(Model model, @ModelAttribute User user) {
+    public String register(Model model, @ModelAttribute User user, @RequestParam("zone.id") TimeZone timezone) {
+        user.setTimezone(timezone.getID());
         var savedUser = userService.save(user);
         if (savedUser.isEmpty()) {
             model.addAttribute("message", "Пользователь с такой почтой уже существует");
