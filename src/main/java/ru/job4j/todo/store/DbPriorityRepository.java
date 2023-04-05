@@ -12,6 +12,11 @@ public class DbPriorityRepository implements PriorityRepository {
 
     private final CrudRepository crudRepository;
 
+    /**
+     * Get all priorities.
+     *
+     * @return Priorities list.
+     */
     @Override
     public Collection<Priority> findAll() {
         return crudRepository.query("from Priority", Priority.class);

@@ -15,10 +15,23 @@ public class DbCategoryRepository implements CategoryRepository {
 
     private final CrudRepository crudRepository;
 
+    /**
+     * Get all Category units.
+     *
+     * @return list of categories.
+     */
+
     @Override
     public Collection<Category> findAll() {
         return crudRepository.query("from Category", Category.class);
     }
+
+    /**
+     * Find category by id.
+     *
+     * @param id Category.id.
+     * @return found Category.
+     */
 
     @Override
     public Category findById(int id) {
@@ -27,6 +40,13 @@ public class DbCategoryRepository implements CategoryRepository {
                 Map.of("fId", id)
         ).get();
     }
+
+    /**
+     * Find Categories by its ids.
+     *
+     * @param ids.
+     * @return автомобиль с id.
+     */
 
     @Override
     public Collection<Category> findByIds(List<Integer> ids) {

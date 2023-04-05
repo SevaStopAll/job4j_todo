@@ -14,12 +14,25 @@ import java.util.Optional;
 public class DbUserRepository implements UserRepository {
     private final CrudRepository crudRepository;
 
+    /**
+     * Save a new user in database.
+     *
+     * @param user user.
+     * @return Optional of user with id from database.
+     */
     @Override
     public Optional<User> save(User user) {
         crudRepository.run(session -> session.persist(user));
         return Optional.of(user);
     }
 
+    /**
+     * Find in database with user's login and password.
+     *
+     * @param login user's login.
+     * @param password user's password.
+     * @return Optional of found user.
+     */
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
         return crudRepository.optional(
@@ -28,11 +41,23 @@ public class DbUserRepository implements UserRepository {
         );
     }
 
+    /**
+     * Get all users.
+     *
+     * @return User list.
+     */
+
     @Override
     public List<User> findAll() {
         return crudRepository.query("from User", User.class);
     }
 
+    /**
+     * Delete user from database by its id.
+     *
+     * @param id user's id.
+     * @return successful delete .
+     */
     @Override
     public boolean deleteById(int id) {
         crudRepository.run(
